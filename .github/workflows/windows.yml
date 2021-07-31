@@ -24,9 +24,7 @@ on:
         description: "Build dartpy: {ON, OFF}"
         required: true
         default: "ON"
-  schedule:
-    # Runs at 2 UTC every other day
-    - cron: "0 2 * * 0/2"
+  repository_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -78,14 +76,11 @@ jobs:
           cmake --build . --config %BUILD_TYPE% --target ALL_BUILD --parallel
           ctest --rerun-failed --output-on-failure -C %BUILD_TYPE%
 
+  triggered_by_dart:
+    if: github.event_name == 'repository_dispatch'
 
-  schedule_build:
-    if: github.event_name != 'workflow_dispatch'
+    name: windows.${{ matrix.build_type }}
 
-    # The name of jobs
-    name: macos.${{ matrix.build_type }}
-
-    # The type of runner that the job will run on
     runs-on: windows-2019
 
     strategy:
@@ -102,13 +97,16 @@ jobs:
       VCPKG_ROOT: "C:/dartsim/vcpkg"
       VCPKG_BUILD_TAG: v2020.11-1-v7.0-2
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Event Information
+        run: |
+          echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}' (${{ github.event.client_payload.ref }})"
+
       - uses: actions/checkout@v2
         with:
           repository: dartsim/dart
-          ref: dart7/main
+          ref: ${{ github.event.client_payload.ref }}
+
       - name: Install Dependencies
         shell: cmd
         run: |
@@ -116,10 +114,12 @@ jobs:
           choco install -y wget
           wget -q https://github.com/dartsim/vcpkg-build/releases/download/%VCPKG_BUILD_TAG%/vcpkg-dartsim-dependencies.zip
           unzip -qq vcpkg-dartsim-dependencies.zip -d C:\dartsim
+
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -U pytest
+
       - name: Build
         shell: cmd
         run: |

@@ -28,9 +28,7 @@ on:
         description: "Build dartpy: {ON, OFF}"
         required: true
         default: "ON"
-  schedule:
-    # Runs at 2 UTC every other day
-    - cron: "0 2 * * 0/2"
+  repository_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -60,13 +58,11 @@ jobs:
       - name: Build
         run: sudo -E .ci/build.sh
 
-  schedule_build:
-    if: github.event_name != 'workflow_dispatch'
+  triggered_by_dart:
+    if: github.event_name == 'repository_dispatch'
 
-    # The name of jobs
     name: macos.${{ matrix.compiler }}.${{ matrix.build_type }}
 
-    # The type of runner that the job will run on
     runs-on: macos-10.15
 
     strategy:
@@ -81,14 +77,18 @@ jobs:
       BUILD_TYPE: ${{ matrix.build_type }}
       BUILD_DARTPY: ${{ matrix.build_dartpy }}
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Event Information
+        run: |
+          echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}' (${{ github.event.client_payload.ref }})"
+
       - uses: actions/checkout@v2
         with:
           repository: dartsim/dart
-          ref: dart7/main
+          ref: ${{ github.event.client_payload.ref }}
+
       - name: Install Dependencies
         run: .ci/install_osx.sh
+
       - name: Build
         run: sudo -E .ci/build.sh

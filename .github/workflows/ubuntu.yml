@@ -37,9 +37,6 @@ on:
         required: true
         default: "ON"
   repository_dispatch:
-  schedule:
-    # Runs at 2 UTC every other day
-    - cron: "0 2 * * 0/2"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -124,17 +121,16 @@ jobs:
     steps:
       - name: Event Information
         run: |
-          echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}'"
+          echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}' (${{ github.event.client_payload.ref }})"
 
-      # https://github.com/marketplace/actions/docker-setup-qemu
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
           repository: dartsim/dart
           ref: ${{ github.event.client_payload.ref }}
+
+      # https://github.com/marketplace/actions/docker-setup-qemu
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
 
       - name: Pull dev container
         run: docker pull $DART_DEV_IMAGE:$DOCKER_TAG
