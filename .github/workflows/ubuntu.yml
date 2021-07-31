@@ -59,7 +59,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          name: dartsim/dart
+          repository: dartsim/dart
           ref: dart7/main
 
       - name: Pull dev container
