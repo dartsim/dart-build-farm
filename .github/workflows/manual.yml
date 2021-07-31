@@ -13,19 +13,19 @@ on:
         default: 'ubuntu-focal'
       platform:
         description: 'Platform architecture: {linux/amd64, linux/arm64, linux/ppc64le}'
-        required: false
+        required: true
         default: 'linux/amd64'
       compiler:
         description: 'Compiler: {gcc, clang}'
-        required: false
+        required: true
         default: 'gcc'
       build_type:
         description: 'Build type: {Release, Debug}'
-        required: false
+        required: true
         default: 'Release'
       build_dartpy:
         description: 'Build dartpy: {ON, OFF}'
-        required: false
+        required: true
         default: 'ON'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
