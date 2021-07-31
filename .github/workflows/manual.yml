@@ -7,21 +7,66 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
-      name:
-        description: 'Person to greet'
+      os:
+        description: 'OS: {ubuntu-bionic, ubuntu-focal, ubuntu-impish}'
         required: true
-        default: 'Mona the Octocat'
-      home:
-        description: 'location'
+        default: 'ubuntu-focal'
+      platform:
+        description: 'Platform architecture: {linux/amd64, linux/arm64, linux/ppc64le}'
         required: false
-        default: 'The Octoverse'
+        default: 'linux/amd64'
+      compiler:
+        description: 'Compiler: {gcc, clang}'
+        required: false
+        default: 'gcc'
+      build_type:
+        description: 'Build type: {Release, Debug}'
+        required: false
+        default: 'Release'
+      build_dartpy:
+        description: 'Build dartpy: {ON, OFF}'
+        required: false
+        default: 'ON'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # workflow_dispatch test
-  say_hello:
+  # This workflow contains a single job called "build"
+  build:
+    # The name of jobs
+    name: ${{ github.event.inputs.os }}.${{ github.event.inputs.platform }}.${{ github.event.inputs.build_type }}
+
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    env:
+      # Hosted on: https://hub.docker.com/repository/docker/dartsim/dart-dev
+      DART_DEV_IMAGE: dartsim/dart-dev
+      DOCKER_TAG: ${{ github.event.inputs.os }}-v7.0
+      PLATFORM: ${{ github.event.inputs.platform }}
+      COMPILER: ${{ github.event.inputs.compiler }}
+      BUILD_TYPE: ${{ github.event.inputs.build_type }}
+      BUILD_DARTPY: "${{ github.event.inputs.build_dartpy }}"
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - run: |
-          echo "Hello ${{ github.event.inputs.name }}!"
-          echo "- in ${{ github.event.inputs.home }}!"
+      # https://github.com/marketplace/actions/docker-setup-qemu
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+        with:
+          repository: dartsim/dart
+          ref: dart7/main
+
+      - name: Pull dev container
+        run: docker pull $DART_DEV_IMAGE:$DOCKER_TAG
+      - name: Build
+        run: |
+          docker run \
+            -e CI=true \
+            --platform $PLATFORM \
+            --volume $GITHUB_WORKSPACE:$GITHUB_WORKSPACE \
+            --env-file ./.ci/docker/env.list \
+            $DART_DEV_IMAGE:$DOCKER_TAG \
+            /bin/sh -c "cd $GITHUB_WORKSPACE && ./.ci/build.sh"
