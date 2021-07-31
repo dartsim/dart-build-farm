@@ -80,7 +80,7 @@ jobs:
 
   schedule_build:
     # The name of jobs
-    name: ${{ matrix.os }}.${{ matrix.platform }}.${{ matrix.build_type }}
+    name: ${{ matrix.os }}.${{ matrix.platform }}.${{ matrix.compiler }}.${{ matrix.build_type }}
 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
