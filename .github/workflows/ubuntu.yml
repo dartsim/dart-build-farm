@@ -134,7 +134,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: dartsim/dart
-          ref: dart7/main
+          ref: ${{ github.event.client_payload.ref }}
 
       - name: Pull dev container
         run: docker pull $DART_DEV_IMAGE:$DOCKER_TAG
@@ -149,10 +149,10 @@ jobs:
             $DART_DEV_IMAGE:$DOCKER_TAG \
             /bin/sh -c "cd $GITHUB_WORKSPACE && ./.ci/build.sh"
 
-      - name: PONG - Send response to dartsim/dart
-        if: github.event.action == 'ping'
+      - name: Send response to dartsim/dart
+        if: github.event.action == 'Build Commit'
         run: |
           curl -X POST https://api.github.com/repos/dartsim/dart/dispatches \
           -H 'Accept: application/vnd.github.everest-preview+json' \
           -u ${{ secrets.ACCESS_TOKEN }} \
-          --data '{"event_type": "pong", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
+          --data '{"event_type": "Build Commit -- Done", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
