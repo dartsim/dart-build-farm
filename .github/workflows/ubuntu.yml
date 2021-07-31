@@ -39,6 +39,8 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   manual_build:
+    if: github.event_name == 'workflow_dispatch'
+
     # The name of jobs
     name: ${{ github.event.inputs.os }}.${{ github.event.inputs.platform }}.${{ github.event.inputs.build_type }}
 
@@ -79,6 +81,8 @@ jobs:
             /bin/sh -c "cd $GITHUB_WORKSPACE && ./.ci/build.sh"
 
   schedule_build:
+    if: github.event_name != 'workflow_dispatch'
+
     # The name of jobs
     name: ${{ matrix.os }}.${{ matrix.platform }}.${{ matrix.compiler }}.${{ matrix.build_type }}
 
