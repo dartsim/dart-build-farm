@@ -60,7 +60,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           name: dartsim/dart
-          ref: refs/heads/dart7/main
+          ref: dart7/main
 
       - name: Pull dev container
         run: docker pull $DART_DEV_IMAGE:$DOCKER_TAG
