@@ -92,7 +92,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [archilinux]
+        os: [archlinux]
         platform: [linux/amd64]
         compiler: [gcc, clang]
         build_type: [Debug, Release]
