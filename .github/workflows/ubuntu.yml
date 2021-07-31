@@ -36,6 +36,7 @@ on:
         description: "Build dartpy: {ON, OFF}"
         required: true
         default: "ON"
+  repository_dispatch:
   schedule:
     # Runs at 2 UTC every other day
     - cron: "0 2 * * 0/2"
@@ -84,13 +85,11 @@ jobs:
             $DART_DEV_IMAGE:$DOCKER_TAG \
             /bin/sh -c "cd $GITHUB_WORKSPACE && ./.ci/build.sh"
 
-  schedule_build:
-    if: github.event_name != 'workflow_dispatch'
+  triggered_by_dart:
+    if: github.event_name == 'repository_dispatch'
 
-    # The name of jobs
     name: ${{ matrix.os }}.${{ matrix.platform }}.${{ matrix.compiler }}.${{ matrix.build_type }}
 
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     strategy:
@@ -122,8 +121,11 @@ jobs:
       BUILD_TYPE: ${{ matrix.build_type }}
       BUILD_DARTPY: ${{ matrix.build_dartpy }}
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Event Information
+        run: |
+          echo "Event '${{ github.event.action }}' received from '${{ github.event.client_payload.repository }}'"
+
       # https://github.com/marketplace/actions/docker-setup-qemu
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -136,6 +138,7 @@ jobs:
 
       - name: Pull dev container
         run: docker pull $DART_DEV_IMAGE:$DOCKER_TAG
+
       - name: Build
         run: |
           docker run \
@@ -145,3 +148,11 @@ jobs:
             --env-file ./.ci/docker/env.list \
             $DART_DEV_IMAGE:$DOCKER_TAG \
             /bin/sh -c "cd $GITHUB_WORKSPACE && ./.ci/build.sh"
+
+      - name: PONG - Send response to dartsim/dart
+        if: github.event.action == 'ping'
+        run: |
+          curl -X POST https://api.github.com/repos/dartsim/dart/dispatches \
+          -H 'Accept: application/vnd.github.everest-preview+json' \
+          -u ${{ secrets.ACCESS_TOKEN }} \
+          --data '{"event_type": "pong", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
