@@ -90,6 +90,7 @@ jobs:
       matrix:
         os: [ubuntu-bionic, ubuntu-focal, ubuntu-impish]
         platform: [linux/amd64, linux/arm64, linux/ppc64le]
+        compiler: [gcc, clang]
         build_type: [Debug, Release]
         build_dartpy: [ON]
 
@@ -98,7 +99,7 @@ jobs:
       DART_DEV_IMAGE: dartsim/dart-dev
       DOCKER_TAG: ${{ matrix.os }}-v7.0
       PLATFORM: ${{ matrix.platform }}
-      COMPILER: gcc
+      COMPILER: ${{ matrix.compiler }}
       BUILD_TYPE: ${{ matrix.build_type }}
       BUILD_DARTPY: "${{ matrix.build_dartpy }}"
 
