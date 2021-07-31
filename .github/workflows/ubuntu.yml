@@ -16,14 +16,6 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # workflow_dispatch test
-  say_hello:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "Hello ${{ github.event.inputs.name }}!"
-          echo "- in ${{ github.event.inputs.home }}!"
-
   # This workflow contains a single job called "build"
   build:
     # The name of jobs
@@ -36,13 +28,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-bionic, ubuntu-focal, ubuntu-impish]
-        platform: [linux/amd64]
-        build_type: [Release]
-        codecov: [OFF]
-        check_format: [OFF]
-        num_cores: [MAX]
-        build_examples: [ON]
-        build_tutorials: [ON]
+        platform: [linux/amd64, linux/arm64, linux/ppc64le]
+        build_type: [Debug, Release]
         build_dartpy: [ON]
 
     env:
@@ -53,11 +40,6 @@ jobs:
       COMPILER: gcc
       BUILD_TYPE: ${{ matrix.build_type }}
       BUILD_DARTPY: "${{ matrix.build_dartpy }}"
-      CODECOV: ${{ matrix.codecov }}
-      CHECK_FORMAT: ${{ matrix.check_format }}
-      NUM_CORES: ${{ matrix.num_cores }}
-      BUILD_EXAMPLES: ${{ matrix.build_examples }}
-      BUILD_TUTORIALS: ${{ matrix.build_tutorials }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
