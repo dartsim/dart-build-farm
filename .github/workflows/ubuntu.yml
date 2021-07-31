@@ -6,39 +6,39 @@ name: Ubuntu
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
       ref:
-        description: 'Branch/tag/commit'
+        description: "Branch/tag/commit"
         required: true
         default: dart7/main
       os:
-        description: 'OS: {ubuntu-bionic, ubuntu-focal, ubuntu-impish}'
+        description: "OS: {ubuntu-bionic, ubuntu-focal, ubuntu-impish}"
         required: true
-        default: 'ubuntu-focal'
+        default: "ubuntu-focal"
       platform:
-        description: 'Platform architecture: {linux/amd64, linux/arm64, linux/ppc64le}'
+        description: "Platform architecture: {linux/amd64, linux/arm64, linux/ppc64le}"
         required: true
-        default: 'linux/amd64'
+        default: "linux/amd64"
       compiler:
-        description: 'Compiler: {gcc, clang}'
+        description: "Compiler: {gcc, clang}"
         required: true
-        default: 'gcc'
+        default: "gcc"
       build_type:
-        description: 'Build type: {Release, Debug}'
+        description: "Build type: {Release, Debug}"
         required: true
-        default: 'Release'
+        default: "Release"
       build_dartpy:
-        description: 'Build dartpy: {ON, OFF}'
+        description: "Build dartpy: {ON, OFF}"
         required: true
-        default: 'ON'
+        default: "ON"
   schedule:
     # Runs at 2 UTC every other day
-    - cron: '0 2 * * 0/2'
+    - cron: "0 2 * * 0/2"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -102,16 +102,16 @@ jobs:
         build_type: [Debug, Release]
         build_dartpy: [ON]
         include:
-          -  os: ubuntu-focal
-             platform: linux/arm64
-             compiler: gcc
-             build_type: Release
-             build_dartpy: ON
-          -  os: ubuntu-focal
-             platform: linux/ppc64le
-             compiler: gcc
-             build_type: Release
-             build_dartpy: ON
+          - os: ubuntu-focal
+            platform: linux/arm64
+            compiler: gcc
+            build_type: Release
+            build_dartpy: ON
+          - os: ubuntu-focal
+            platform: linux/ppc64le
+            compiler: gcc
+            build_type: Release
+            build_dartpy: ON
 
     env:
       # Hosted on: https://hub.docker.com/repository/docker/dartsim/dart-dev
