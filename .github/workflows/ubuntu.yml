@@ -144,11 +144,3 @@ jobs:
             --env-file ./.ci/docker/env.list \
             $DART_DEV_IMAGE:$DOCKER_TAG \
             /bin/sh -c "cd $GITHUB_WORKSPACE && ./.ci/build.sh"
-
-      - name: Send response to dartsim/dart
-        if: github.event.action == 'Build Commit'
-        run: |
-          curl -X POST https://api.github.com/repos/dartsim/dart/dispatches \
-          -H 'Accept: application/vnd.github.everest-preview+json' \
-          -u ${{ secrets.ACCESS_TOKEN }} \
-          --data '{"event_type": "Build Commit -- Done", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
