@@ -89,10 +89,21 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-bionic, ubuntu-focal, ubuntu-impish]
-        platform: [linux/amd64, linux/arm64, linux/ppc64le]
+        platform: [linux/amd64]
         compiler: [gcc, clang]
         build_type: [Debug, Release]
         build_dartpy: [ON]
+        include:
+          -  os: ubuntu-focal
+             platform: linux/arm64
+             compiler: gcc
+             build_type: Release
+             build_dartpy: ON
+          -  os: ubuntu-focal
+             platform: linux/ppc64le
+             compiler: gcc
+             build_type: Release
+             build_dartpy: ON
 
     env:
       # Hosted on: https://hub.docker.com/repository/docker/dartsim/dart-dev
