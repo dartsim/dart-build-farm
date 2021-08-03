@@ -102,12 +102,14 @@ jobs:
             platform: linux/arm64
             compiler: gcc
             build_type: Release
-            build_dartpy: ON
+            # Disabled dartpy because it exceeds 6 hours of build time
+            build_dartpy: OFF
           - os: ubuntu-focal
             platform: linux/ppc64le
             compiler: gcc
             build_type: Release
-            build_dartpy: ON
+            # Disabled dartpy because it exceeds 6 hours of build time
+            build_dartpy: OFF
 
     env:
       # Hosted on: https://hub.docker.com/repository/docker/dartsim/dart-dev
