@@ -96,18 +96,35 @@ jobs:
         platform: [linux/amd64]
         compiler: [gcc, clang]
         build_type: [Debug, Release]
+        build_tutorials: [ON]
         build_dartpy: [ON]
         include:
           - os: ubuntu-focal
             platform: linux/arm64
             compiler: gcc
             build_type: Release
+            build_tutorials: OFF
+            # Disabled dartpy because it exceeds 6 hours of build time
+            build_dartpy: OFF
+          - os: ubuntu-focal
+            platform: linux/arm64
+            compiler: clang
+            build_type: Release
+            build_tutorials: OFF
             # Disabled dartpy because it exceeds 6 hours of build time
             build_dartpy: OFF
           - os: ubuntu-focal
             platform: linux/ppc64le
             compiler: gcc
             build_type: Release
+            build_tutorials: OFF
+            # Disabled dartpy because it exceeds 6 hours of build time
+            build_dartpy: OFF
+          - os: ubuntu-focal
+            platform: linux/ppc64le
+            compiler: clang
+            build_type: Release
+            build_tutorials: OFF
             # Disabled dartpy because it exceeds 6 hours of build time
             build_dartpy: OFF
 
@@ -118,6 +135,7 @@ jobs:
       PLATFORM: ${{ matrix.platform }}
       COMPILER: ${{ matrix.compiler }}
       BUILD_TYPE: ${{ matrix.build_type }}
+      BUILD_TUTORIALS: ${{ matrix.build_tutorials }}
       BUILD_DARTPY: ${{ matrix.build_dartpy }}
 
     steps:
