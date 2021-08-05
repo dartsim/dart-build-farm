@@ -109,24 +109,8 @@ jobs:
             build_tutorials: OFF
             build_dartpy: OFF
           - os: ubuntu-focal
-            platform: linux/arm64
-            compiler: clang
-            build_type: Release
-            # Disabled examples, tutorials, and dartpy because build time exceeds 6 hours
-            build_examples: OFF
-            build_tutorials: OFF
-            build_dartpy: OFF
-          - os: ubuntu-focal
             platform: linux/ppc64le
             compiler: gcc
-            build_type: Release
-            # Disabled examples, tutorials, and dartpy because build time exceeds 6 hours
-            build_examples: OFF
-            build_tutorials: OFF
-            build_dartpy: OFF
-          - os: ubuntu-focal
-            platform: linux/ppc64le
-            compiler: clang
             build_type: Release
             # Disabled examples, tutorials, and dartpy because build time exceeds 6 hours
             build_examples: OFF
