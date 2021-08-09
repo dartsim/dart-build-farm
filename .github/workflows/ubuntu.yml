@@ -85,7 +85,7 @@ jobs:
   triggered_by_dart:
     if: github.event_name == 'repository_dispatch'
 
-    name: ${{ matrix.os }}.${{ matrix.platform }}.${{ matrix.compiler }}.${{ matrix.build_type }}
+    name: ${{ matrix.image_tag }}.${{ matrix.platform }}.${{ matrix.compiler }}.${{ matrix.build_type }}
 
     runs-on: ubuntu-latest
 
