@@ -92,7 +92,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-bionic, ubuntu-focal, ubuntu-impish]
+        image_tag: [ubuntu-bionic-v7.0, ubuntu-focal-v7.0, ubuntu-impish-v7.0]
         platform: [linux/amd64]
         compiler: [gcc, clang]
         build_type: [Debug, Release]
@@ -100,7 +100,12 @@ jobs:
         build_tutorials: [ON]
         build_dartpy: [ON]
         include:
-          - os: ubuntu-focal
+          - image_tag: ubuntu-focal-v7.0-minimal
+            platform: linux/amd64
+            compiler: gcc
+            build_type: Release
+            build_dartpy: OFF
+          - image_tag: ubuntu-focal-v7.0
             platform: linux/arm64
             compiler: gcc
             build_type: Release
@@ -108,7 +113,7 @@ jobs:
             build_examples: OFF
             build_tutorials: OFF
             build_dartpy: OFF
-          - os: ubuntu-focal
+          - image_tag: ubuntu-focal-v7.0
             platform: linux/ppc64le
             compiler: gcc
             build_type: Release
@@ -120,7 +125,7 @@ jobs:
     env:
       # Hosted on: https://hub.docker.com/repository/docker/dartsim/dart-dev
       DART_DEV_IMAGE: dartsim/dart-dev
-      DOCKER_TAG: ${{ matrix.os }}-v7.0
+      DOCKER_TAG: ${{ matrix.image_tag }}
       PLATFORM: ${{ matrix.platform }}
       COMPILER: ${{ matrix.compiler }}
       BUILD_TYPE: ${{ matrix.build_type }}
