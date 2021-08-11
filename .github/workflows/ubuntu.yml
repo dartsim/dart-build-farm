@@ -104,6 +104,8 @@ jobs:
             platform: linux/amd64
             compiler: gcc
             build_type: Release
+            build_examples: OFF
+            build_tutorials: OFF
             build_dartpy: OFF
           - image_tag: ubuntu-focal-v7.0
             platform: linux/arm64
