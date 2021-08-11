@@ -99,6 +99,7 @@ jobs:
         build_examples: [ON]
         build_tutorials: [ON]
         build_dartpy: [ON]
+        test_installation: [ON]
         include:
           - image_tag: ubuntu-focal-v7.0-minimal
             platform: linux/amd64
@@ -107,6 +108,7 @@ jobs:
             build_examples: OFF
             build_tutorials: OFF
             build_dartpy: OFF
+            test_installation: OFF
           - image_tag: ubuntu-focal-v7.0
             platform: linux/arm64
             compiler: gcc
@@ -115,6 +117,7 @@ jobs:
             build_examples: OFF
             build_tutorials: OFF
             build_dartpy: OFF
+            test_installation: ON
           - image_tag: ubuntu-focal-v7.0
             platform: linux/ppc64le
             compiler: gcc
@@ -123,6 +126,7 @@ jobs:
             build_examples: OFF
             build_tutorials: OFF
             build_dartpy: OFF
+            test_installation: ON
 
     env:
       # Hosted on: https://hub.docker.com/repository/docker/dartsim/dart-dev
@@ -134,6 +138,7 @@ jobs:
       BUILD_EXAMPLES: ${{ matrix.build_examples }}
       BUILD_TUTORIALS: ${{ matrix.build_tutorials }}
       BUILD_DARTPY: ${{ matrix.build_dartpy }}
+      TEST_INSTALLATION: ${{ matrix.test_installation }}
 
     steps:
       - name: Event Information
